@@ -5,7 +5,7 @@ OBJECTS = radio.o
 DEPS += \
   libmsp \
   libmspware \
-  libuartlink \
+  libmspuartlink \
   libfxl \
 
 override SRC_ROOT = ../../src
