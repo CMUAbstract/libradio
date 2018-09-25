@@ -1,4 +1,4 @@
-ifeq($(TOOLCHAIN),gcc)
+ifeq ($(TOOLCHAIN),gcc)
 DEPS += libradio
 else
 

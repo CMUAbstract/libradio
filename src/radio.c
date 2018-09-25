@@ -7,10 +7,20 @@
 #include <libmsp/sleep.h>
 #include <libfxl/fxl6408.h>
 #include <libmspuartlink/uartlink.h>
+#include <libcapybara/capy_board_init.h>
+
 #include "radio.h"
 
+#if BOARD_MAJOR != 2
+#warning "problem! error defining board"
+#else
+#warning "Got it!"
+#endif
 
-radio_buf_t radio_buff[LIBRADIO_BUFF_LEN];
+
+
+radio_buf_t radio_buff_internal[LIBRADIO_BUFF_LEN + 1];
+radio_buf_t *radio_buff = (radio_buf_t *) (radio_buff_internal + 1);
 
 static inline void radio_on()
 {
@@ -37,6 +47,10 @@ static inline void radio_off()
 {
 #if (BOARD_MAJOR == 1 && BOARD_MINOR == 0) || \
   (BOARD_MAJOR == 2 && BOARD_MINOR == 0)
+#if (PORT_RADIO_RST == 4 && PIN_RADIO_RST == 1 && PORT_RADIO_SW == 4 && \
+  PIN_RADIO_SW == 0)
+  #warning "Correct rst sw config!\r\n"
+#endif
   GPIO(PORT_RADIO_RST, OUT) |= BIT(PIN_RADIO_RST); // reset for clean(er) shutdown
   msp_sleep(1);
   GPIO(PORT_RADIO_SW, OUT) &= ~BIT(PIN_RADIO_SW);
@@ -51,11 +65,13 @@ static inline void radio_off()
 /*
  * @brief: activates the radio on the CAPYBARA platform
  */
-#if (BOARD_MAJOR == 2 && BOARD_MINOR ==0) 
- void radio_send() { radio_on();
+#if (BOARD_MAJOR == 2 && BOARD_MINOR == 0) 
+void radio_send() { 
+  printf("Sending!\r\n");
+  radio_on();
   __delay_cycles(120000);
   uartlink_open_tx();
-  uartlink_send((uint8_t *)&radio_buff, LIBRADIO_BUFF_LEN*sizeof(radio_buf_t));
+  uartlink_send(radio_buff_internal, LIBRADIO_BUFF_LEN);
   uartlink_close();
   // TODO: wait until radio is finished; for now, wait for 0.25sec
   __delay_cycles(120000);

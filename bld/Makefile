@@ -7,6 +7,8 @@ DEPS += \
   libmspware \
   libmspuartlink \
   libfxl \
+  libcapybara \
+
 
 override SRC_ROOT = ../../src
 
