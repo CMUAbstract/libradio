@@ -13,8 +13,6 @@
 
 #if BOARD_MAJOR != 2
 #warning "problem! error defining board"
-#else
-#warning "Got it!"
 #endif
 
 
