@@ -7,9 +7,8 @@
 #include <libmsp/sleep.h>
 #include <libfxl/fxl6408.h>
 #include <libmspuartlink/uartlink.h>
-#include <libcapybara/capy_board_init.h>
-
-#include "radio.h"
+#include <libcapybara/board.h>
+#include <libradio/radio.h>
 
 #if BOARD_MAJOR != 2
 #warning "problem! error defining board"
