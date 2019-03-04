@@ -10,6 +10,12 @@
 #include <libcapybara/board.h>
 #include <libradio/radio.h>
 
+#ifdef PACARANA
+#include <libpacarana/pacarana.h>
+REGISTER(my_radio)
+#endif
+
+
 #if BOARD_MAJOR != 2
 #warning "problem! error defining board"
 #endif
@@ -19,7 +25,11 @@
 radio_buf_t radio_buff_internal[LIBRADIO_BUFF_LEN + 1];
 radio_buf_t *radio_buff = (radio_buf_t *) (radio_buff_internal + 1);
 
+#ifdef PACARANA
+DRIVER static inline void radio_on()
+#else
 static inline void radio_on()
+#endif
 {
 #if (BOARD_MAJOR == 1 && BOARD_MINOR == 0) || \
   (BOARD_MAJOR == 2 && BOARD_MINOR == 0)
@@ -30,6 +40,9 @@ static inline void radio_on()
   GPIO(PORT_RADIO_SW, OUT) |= BIT(PIN_RADIO_SW) | BIT(PIN_RADIO_RST);
   GPIO(PORT_RADIO_SW, DIR) |= BIT(PIN_RADIO_SW) | BIT(PIN_RADIO_RST);
   GPIO(PORT_RADIO_RST, OUT) &= ~BIT(PIN_RADIO_RST);
+  #ifdef PACARANA
+  STATE_CHANGE(my_radio,0x0)
+  #endif
 
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
   fxl_set(BIT_RADIO_SW | BIT_RADIO_RST);
@@ -40,7 +53,11 @@ static inline void radio_on()
 #endif // BOARD_{MAJOR,MINOR}
 }
 
+#ifdef PACARANA
+DRIVER static inline void radio_off()
+#else
 static inline void radio_off()
+#endif
 {
 #if (BOARD_MAJOR == 1 && BOARD_MINOR == 0) || \
   (BOARD_MAJOR == 2 && BOARD_MINOR == 0)
@@ -51,6 +68,9 @@ static inline void radio_off()
   GPIO(PORT_RADIO_RST, OUT) |= BIT(PIN_RADIO_RST); // reset for clean(er) shutdown
   msp_sleep(1);
   GPIO(PORT_RADIO_SW, OUT) &= ~BIT(PIN_RADIO_SW);
+  #ifdef PACARANA
+  STATE_CHANGE(my_radio,0x1)
+  #endif
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
   fxl_clear(BIT_RADIO_SW);
 #else // BOARD_{MAJOR,MINOR}
