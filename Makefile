@@ -3,7 +3,7 @@ LIB = libradio
 OBJECTS = \
 	radio.o \
 
-DEPS += libcapybara libio libmsp libfxl libmspuartlink
+DEPS += libcapybara libio libmsp libfxl libmspuartlink libmspbuiltins
 
 override SRC_ROOT = ../../src
 
