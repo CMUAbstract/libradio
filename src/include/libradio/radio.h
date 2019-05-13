@@ -8,5 +8,6 @@ typedef uint8_t radio_buf_t;
 extern radio_buf_t *radio_buff;
 
 void radio_send(void);
-
+void radio_on(void);
+void radio_off(void);
 #endif

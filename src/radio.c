@@ -26,9 +26,9 @@ radio_buf_t radio_buff_internal[LIBRADIO_BUFF_LEN + 1];
 radio_buf_t *radio_buff = (radio_buf_t *) (radio_buff_internal + 1);
 
 #ifdef PACARANA
-DRIVER static inline void radio_on()
+DRIVER inline void radio_on()
 #else
-static inline void radio_on()
+inline void radio_on()
 #endif
 {
 #if (BOARD_MAJOR == 1 && BOARD_MINOR == 0) || \
@@ -41,7 +41,7 @@ static inline void radio_on()
   GPIO(PORT_RADIO_SW, DIR) |= BIT(PIN_RADIO_SW) | BIT(PIN_RADIO_RST);
   GPIO(PORT_RADIO_RST, OUT) &= ~BIT(PIN_RADIO_RST);
   #ifdef PACARANA
-  STATE_CHANGE(my_radio,0x0)
+  STATE_CHANGE(my_radio,0x1)
   #endif
 
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
@@ -54,9 +54,9 @@ static inline void radio_on()
 }
 
 #ifdef PACARANA
-DRIVER static inline void radio_off()
+DRIVER inline void radio_off()
 #else
-static inline void radio_off()
+inline void radio_off()
 #endif
 {
 #if (BOARD_MAJOR == 1 && BOARD_MINOR == 0) || \
@@ -69,7 +69,7 @@ static inline void radio_off()
   msp_sleep(1);
   GPIO(PORT_RADIO_SW, OUT) &= ~BIT(PIN_RADIO_SW);
   #ifdef PACARANA
-  STATE_CHANGE(my_radio,0x1)
+  STATE_CHANGE(my_radio,0x0)
   #endif
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
   fxl_clear(BIT_RADIO_SW);
