@@ -1,3 +1,5 @@
+#include <libmspware/driverlib.h>
+#include <libmspbuiltins/builtins.h>
 #include <libio/console.h>
 #include <libmsp/mem.h>
 #include <libmsp/periph.h>
@@ -10,6 +12,7 @@
 #include <libcapybara/board.h>
 #include <libradio/radio.h>
 
+#define PACARANA
 #ifdef PACARANA
 #include <libpacarana/pacarana.h>
 REGISTER(my_radio)
@@ -83,7 +86,7 @@ inline void radio_off()
  * @brief: activates the radio on the CAPYBARA platform
  */
 #if (BOARD_MAJOR == 2 && BOARD_MINOR == 0) 
-void radio_send() { 
+DRIVER void radio_send() { 
   printf("Sending!\r\n");
   radio_on();
   __delay_cycles(120000);
