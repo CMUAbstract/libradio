@@ -75,4 +75,16 @@ void radio_send() {
   radio_off();
   return;
 }
+void radio_send_one_off() { 
+  //printf("Sending!\r\n");
+  radio_on();
+  __delay_cycles(90000);
+  uartlink_open_tx();
+  uartlink_send(radio_buff_internal, LIBRADIO_BUFF_LEN);
+  uartlink_close();
+  __delay_cycles(80000);
+  // To prevent the long stall, we'll just skip turning off the radio
+  radio_off();
+  return;
+}
 #endif
