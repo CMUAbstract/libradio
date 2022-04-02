@@ -19,6 +19,7 @@
 radio_buf_t radio_buff_internal[LIBRADIO_BUFF_LEN + 1];
 radio_buf_t *radio_buff = (radio_buf_t *) (radio_buff_internal + 1);
 
+
 static inline void radio_on()
 {
 #if (BOARD_MAJOR == 1 && BOARD_MINOR == 0) || \
@@ -84,6 +85,8 @@ void radio_send_one_off() {
   uartlink_close();
   __delay_cycles(80000);
   // To prevent the long stall, we'll just skip turning off the radio
+  //__delay_cycles(2000000);
+  __delay_cycles(800000);
   radio_off();
   return;
 }
